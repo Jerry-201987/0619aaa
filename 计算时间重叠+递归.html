@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      var log = console.log;
+      // const list = [
+      //   { start: "12月10日", end: "1月10日" },
+      //   { start: "1月3日", end: "1月13日" },
+      //   { start: "1月5日", end: "1月11日" },
+      //   { start: "1月7日", end: "1月14日" },
+      //   { start: "1月16日", end: "1月18日" },
+      // ];
+      // // var arr1 = list.map(r=>Object.values(r)).map(rr=>{
+      // //   // log(rr)
+      // //   return rr.map(rrr=>rrr.match(/\d+/g).join('/'))
+      // // })
+      // var arr1 = list
+      //   .map((r) => Object.values(r))
+      //   .map((rr) => rr.map((rrr) => rrr.match(/\d+/g).join("/")));
+      // const msByDay = 60 * 60 * 24 * 1000; //millionsecondsByDay
+      // log(arr1, 57);
+      // const yy = new Date().getFullYear();
+      // log(yy, 59);
+      // arr1 = arr1.map((r) => {
+      //   if (r[0].split("/")[0] > r[1].split("/")[0]) {
+      //     log(yy, 59);
+      //     r[0] = yy + "/" + r[0];
+
+      //     r[1] = yy + 1 + "/" + r[1];
+      //   } else {
+      //     log(yy, 59);
+      //     r[0] = yy + "/" + r[0];
+      //     r[1] = yy + "/" + r[1];
+      //   }
+      //   return r;
+      // });
+      // log(arr1);
+      
+      /* 去除字符串空格 */
+      // function findLongestWordLength(str) {
+      //   console.log(str.split('\xa0'));
+      //   console.log(str.split(/\s/));
+      //   console.log(str.match(/\S+/g));
+      //   console.log(str.replace(/\s/g,''));
+      // }
+      // findLongestWordLength("The quick  brown fox jumped over the lazy dog");
+
+      /* 不推荐使用 */
+      // function getMaxCode4(str) {
+      //   // const strArr = str.split("");
+      //   const strArr = str.match(/\d/g);
+      //   let count = 0,
+      //     word;
+      //   const set = new Set(str);
+      //   // log(set, 30)
+      //   for (const i of set) {
+      //   //   log(i)
+      //     const filterArr = strArr.filter((r) => r === i);
+      //   //   log(filterArr)
+      //     if (filterArr.length > count) {
+      //       count = filterArr.length;
+      //       word = i;
+      //     }
+      //   }
+
+      //   return `${word},${count}个`;
+      // }
+      // log(getMaxCode4("12454843161843225"));
+
+      /* 递归orNot */
+      // const arr = [
+      //   {
+      //     id: 1,
+      //     children: [
+      //       {
+      //         id: 2,
+      //       },
+      //       {
+      //         id: 3,
+      //         children: [
+      //           {
+      //             id: 4,
+      //           },
+      //         ],
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: 5,
+      //     children: [
+      //       {
+      //         id: 6,
+      //       },
+      //     ],
+      //   },
+      // ];
+      const arr = [
+        { id: "29", pid: "", name: "总裁办" },
+        { id: "2c", pid: "", name: "财务部" },
+        { id: "2d", pid: "2c", name: "财务核算部" },
+        { id: "2f", pid: "2c", name: "薪资管理部" },
+        { id: "d2", pid: "", name: "技术部" },
+        { id: "d3", pid: "d2", name: "Java研发部" },
+      ];
+      const arr2 = JSON.parse(JSON.stringify(arr));
+      function list2Tree(list) {
+        const treeList = [],
+          map = {};
+        list.forEach((item) => {
+          if (!item.children) {
+            item.children = [];
+          }
+          map[item.id] = item;
+        });
+        // log(map, 56);
+        list.forEach((item) => {
+          const parent = map[item.pid];
+          if (parent) {
+            parent.children.push(item);
+          } else {
+            treeList.push(item);
+          }
+        });
+        return treeList;
+      }
+      log(list2Tree(arr));
+      log(arr);
+
+      function treeArr(parent) {
+        let kong = [];
+        arr2.forEach((item) => {
+          if (item.pid === parent) {
+            item.children = treeArr(item.id);
+            kong.push(item);
+          }
+        });
+        return kong;
+      }
+
+      let xxx = treeArr("");
+      function shanchu(list) {
+        list.forEach((item) => {
+          delete item.pid;
+          // 151行是否注释，看情况
+          if (!item.children.length) delete item.children;
+          if (item.children) {
+            shanchu(item.children);
+          }
+        });
+        return list;
+      }
+      log(shanchu(xxx));
+
+      // // function find(array, param, paramKey = "id", childrenKey = "children") {
+      // //   let res;
+      // //   for (let index = 0; index < array.length; index++) {
+      // //     function fn() {
+      // //       if (array[index][paramKey] === param) return array[index];
+      // //       if (array[index][childrenKey] && array[index][childrenKey].length)
+      // //         return find(array[index][childrenKey], param);
+      // //     }
+      // //     if (fn()) {
+      // //       res = fn();
+      // //       break;
+      // //     }
+      // //   }
+      // //   return res;
+      // // }
+      // function find(arr, id) {
+      //   var res = null;
+      //   var fn = function (arr) {
+      //     if (Array.isArray(arr)) {
+      //       arr.forEach((item) => {
+      //         if (item.id === id) {
+      //           res = item;
+      //         } else if (item.children) {
+      //           fn(item.children);
+      //         }
+      //       });
+      //     }
+      //   };
+      //   fn(arr); // 调用一下
+      //   return res;
+      // }
+      // log(find(arr, 1));
+      // log(find(arr, 2));
+      // log(find(arr, 5));
+
+      // let hd = 'courage.look up to,think highly of！'
+      // let mathStr = 'ⅢⅡ666Ⅻ_\n-——'
+      // log(hd.match(/\p{L}+/ug)) // Letter字母
+      // log(mathStr.match(/\p{N}+/ug)) // Number数字 包含拉丁数字
+      // log(mathStr.match(/\p{Nl}+/ug)) // Letter_Number拉丁数字
+      // log(hd.match(/\p{P}+/ug).join('')) // Punctuation标点符号
+      // log(hd.match(/\W+/g).map(r=>r.replace(/\s/g,'')).filter(r=>r).join(''))
+      // log(hd.match(/\S+/g).map(r=>r.replace(/\w/g,'')).filter(Boolean).join(''))
+      // log(hd.match(/\W+/g).join('').replace(/\s/g,''))
+
+      let hdd = `张三:010-99999999,李四:020-88888888네가 나를 사랑하는 것 보다 내Όμως όντως σε αγαπώ και επειδή σε αγαπώ, νοιάζομαι για το ποιος θα γίνεις.`;
+      let resGreek = hdd.match(/\p{sc=Greek}+/gu);
+      let resHangul = hdd.match(/\p{sc=Hangul}+/gu);
+      console.log(resGreek, resHangul);
+
+      // let str = "𝒳𝒴";
+      // console.log(str.match(/[𝒳𝒴]/ug));
+
+      // var hd = `禁止贪婪:12345678,999999999,88888888`;
+      // let reg = /(\d+),?/y;
+      // // reg.lastIndex = 7;
+      // reg.lastIndex = hd.indexOf(':')+1;
+      // while ((res = reg.exec(hd))) console.log(res[1]);
+      
+      /* valueOf面试题 */
+      // var a = {
+      //   i: 1,
+      //   valueOf: () => {
+      //     return (a.i++)**2;
+      //   },
+      //   // toString: () => {
+      //   //   return (a.i++)**2;
+      //   //   // return Math.pow(a.i++,2);
+      //   // },
+      // };
+      // log(a == 1 && a == 4 && a == 9);
+
+      //   const st = "hope2get4u3keyou";
+      //   let letterArr = [...st].filter((r) => Number.isNaN(parseInt(r)));
+      //   let numAr1 = [...st].filter((r) => !letterArr.includes(r));
+      //   let numAr2 = [...st].filter((r) => !letterArr.some((rr) => rr === r));
+      //   let numAr3 = [...st].filter((r) => !Number.isNaN(parseInt(r)));
+      //   log(numAr3);
+      //   log(st.match(/\d/g));
+
+      /* 常德招婿手机号 */
+      //   var arr = new Array(1, 5, 6, 0, 7, 4, 9, 3);
+      //   var indexArr = new Array(0, 1, 2, 3, 4, 0, 5, 1, 2, 6, 7);
+      //   var tel = "";
+      //   for (var i = 0; i < indexArr.length; i++) {
+      //     tel += arr[indexArr[i]];
+      //   }
+      //   log(tel);
+
+      //   var arr = new Array(new Date().getFullYear() - 2015).keys();
+      //   log(Array.from(arr).map((v) => v + 2015));
+      //   function* a(start) {
+      //     while (start < new Date().getFullYear()) {
+      //       yield start++;
+      //     }
+      //   }
+      //   log([...a(2015)]);
+
+      // var b = 10;
+      // (function b() {
+      //   b = 20;
+      //   console.log(b);
+      // })();
+
+
+      /*
+        1.交换律：a ^ b ^ c  <=> a ^ c ^ b
+        2.任何数于0异或为任何数 0 ^ n => n
+        3.相同的数异或为0: n ^ n => 0
+
+        交换数组两个数的位置
+        const arr = [1, 2]
+        [a, b] = arr 
+        a = a ^ b
+        b = b ^ a
+        a = a ^ b
+      */
+
+      /* loadsh的get方法 */
+      deeplyObj = {
+        a: {
+          b: {
+            c: {
+              d: 123,
+            },
+          },
+        },
+      };
+
+      function safeGet(obj, props, val) {
+        if (!obj) return;
+        if (!props) {
+          if (val) return;
+          return;
+        }
+        let result = JSON.parse(JSON.stringify(obj));
+        // const propsArr = props.replace(/\s+/, "").split(".");
+        const propsArr = props.match(/\w+/g);
+        console.log(propsArr);
+        // for (let i = 0, l = propsArr.length; i < l; i++) {
+        //   debugger
+        //   const key = propsArr[i];
+        //   if (key === "") continue;
+        //   result = result[key];
+        //   if (!result) {
+        //     break;
+        //   }
+        // }
+        while ((key = propsArr.shift())) {
+          if (key === "") continue;
+          result = result[key];
+          if(!result) break;
+        }
+        return result || val;
+      }
+
+      console.log(safeGet(deeplyObj, "a.  b..c.d"));
+      console.log(safeGet(deeplyObj, "a.b"));
+      console.log(safeGet(deeplyObj, "a.b.c.d1"));
+      console.log(safeGet(deeplyObj, "a.b.c.d1", "hahah"));
+
+      /* 时分秒一句话 */
+      let t = new Date()
+      t = t.toLocaleString().replace(/\//g, '-').replace(/-(\d)\b/g, '-0$1').replace(/上午(\d+)/, (t.getHours() > 10 ? '' : '0') + '$1').replace(/下午\d+/, t.getHours())
+      log(t)
+
+      /* 不用加减乘除运算符，求数字倍数
+      向左位移一位，取进制 */
+      // let multiply = function (num, multiple) {
+      //   return parseInt([num.toString(multiple), "0"].join(""), multiple);
+      // };
+      // log(multiply(2, 3));
+      // log(multiply(3, 7));
+      // log(multiply(4, 8));
+
+      // for (var i = 0; i <= 20; i++) {
+      //   log(i,parseInt(i, 7));
+      // }
+
+      // function bitAdd(m, n) {
+      //   debugger;
+      //   while (m) {
+      //     [m, n] = [(m & n) << 1, m ^ n];
+      //   }
+      //   return n;
+      // }
+      // bitAdd(7, 7);
+
+      /* 递归 实现 逆序数字 */
+      function fa(num) {
+        let a = num / 10;
+        let b = num % 10;
+        if (a < 1) return num;
+        else {
+          a = Math.floor(a);
+          return `${b}${fa(a)}`;
+        }
+      }
+
+      /* 逆序字符串 reverse */
+      function fb(num) {
+        let arr = num.toString().split("");
+        const kong = new Array();
+        // let val;
+        while ((val = arr.pop())) {
+          kong.push(val);
+        }
+        return kong.join("");
+      }
+      log(fa(100345500) === fb(100345500));
+
+      // String.prototype.reverse = function () {
+      //   var _ths = this.toString().split("");
+      //   var left = 0; //存储左边第一个位置
+      //   var right = _ths.length - 1; //存储右边最后一个位置
+      //   while (left < right) {
+      //     //停止进行的条件
+      //     var temp = _ths[left]; //利用一个中间变量来交换位置
+      //     _ths[left] = _ths[right];
+      //     _ths[right] = temp;
+      //     left++;
+      //     right--;
+      //   }
+      //   return _ths.join("");
+      // };
+
+      // String.prototype.reverse = function () {
+      //   var _ths = this.toString();
+      //   var len = _ths.length;
+      //   var str = "";
+      //   for (var i = 0; i < len; i++) {
+      //     var temp = _ths[i];
+      //     _ths[i] = _ths[len - 1 - i];
+      //     _ths[len - 1 - i] = temp;
+      //     str += _ths[len - 1 - i];
+      //   }
+      //   return str;
+      // };
+      // log("abcdefg".reverse());
+      // log(new Date().toLocaleDateString().reverse());
+
+      /* 手撸flat */
+      // const arr = ["一级", ["二级", ["三级", ["四级"]]], 5, "string", { name: "xxxx" }];
+      // // concat + 递归
+      // function flat(arr) {
+      //   let arrResult = [];
+      //   arr.forEach((item) => {
+      //     if (Array.isArray(item)) {
+      //       log(arguments,arguments.callee(item),53)
+      //       arrResult = arrResult.concat(arguments.callee(item)); // 递归
+      //       // 或者用扩展运算符
+      //       // arrResult.push(...arguments.callee(item));
+      //     } else {
+      //       arrResult.push(item);
+      //     }
+      //   });
+      //   return arrResult;
+      // }
+      // log(flat(arr));
+      // [1, 2, 3, 4, 1, 2, 3, 1, 2, 3, 1, 2, 3, 5, "string", { name: "弹铁蛋同学" }];
+
+      // 栈思想
+      function flat(arr) {
+        const result = [];
+        const stack = [].concat(arr); // 将数组元素拷贝至栈，直接赋值会改变原数组
+        // const stack = arr.slice(); // 浅拷贝
+        // const stack = [...arr]; // 浅拷贝
+        //如果栈不为空，则循环遍历
+        while (stack.length !== 0) {
+          // debugger
+          const val = stack.pop();
+          if (Array.isArray(val)) {
+            stack.push(...val); //如果是数组再次入栈，并且展开了一层
+          } else {
+            result.unshift(val); //如果不是数组就将其取出来放入结果数组中
+          }
+        }
+        return result;
+      }
+      const ar = ["一级", ["二级", ["三级", ["四级"]]], 5, "string", { name: "xxxx" }];
+      log(flat(ar));
+
+      /* 统计数组中每个值，比大小 */
+      let data = [
+        { data: 1 },
+        { data: 4 },
+        { data: 7 },
+        { data: 3 },
+        { data: 6 },
+        { data: 8 },
+        { data: 7.2 },
+        { data: 7.3 },
+      ];
+
+      let foo = function (data) {
+        let returnData = [];
+        data.forEach((item, index) => {
+          let itemObj = { value: item.data, count: 0 };
+          for (let i = index; i >= 0; i--) {
+            if (item.data >= data[i].data) itemObj.count++;
+            else break;
+          }
+          returnData.push(itemObj);
+        });
+        return returnData;
+      };
+      log(foo(data));
+
+      /* Unicode中文汉字编码16进制转十进制 */
+      function getNum(str) {
+        var st = "0123456789abcdef";
+        var sLen = str.length - 1;
+        var num = 0;
+        for (var i = 0; i <= sLen; i++) {
+          num += st.indexOf(str[i]) * 16 ** (sLen - i);
+        }
+        return num;
+      }
+      log(getNum("4e00"));
+      log(getNum("9fa5"));
+
+      /* 原始数据  [1, "2", 3, "4"];
+      期望数据 { number: [1, 3], string: ["2", "4"] }; */
+      var arrr = [1, "2", 3, "4"];
+      // let tpArr = arr.map((r) => ({ [typeof r]: r }));
+      // let ar2 = [...new Set(tpArr.map((r) => Object.keys(r)).flat())];
+      // // log(tpArr, ar2);
+      // ar2 = ar2
+      //   .map((tp) => ({
+      //     [tp]: tpArr
+      //       .filter((r) => Object.keys(r).join() === tp)
+      //       .reduce((t, r) => t.concat(r[tp]), []),
+      //   }))
+      //   .reduce((t, r) => Object.assign(t, r), {});
+      // log(ar2);
+      let obj = new Object();
+      obj = arrr.map((r) => typeof r).reduce((res, item, i) => {
+          // debugger
+          res[item] = [...(res[item] || []), arrr[i]];
+          return res;
+        }, {});
+      log(obj);
+
+      /* 排列求和 */
+      function combination(m, n) {
+        var a = 1; //分母
+        var b = 1; //分子
+        if (m > n) return;
+        for (var i = 1; i <= m; i++) {
+          a *= i; //分母
+        }
+        for (var j = n - m + 1; j <= n; j++) {
+          b *= j; //分子
+        }
+        return b / a;
+      }
+      function combinationSum(b) {
+        var sum = 0;
+        for (var i = 1; i <= b; i++) {
+          sum += combination(i, b);
+        }
+        return sum;
+      }
+      log(combinationSum(2));//3 ['a','b','ab']
+      log(combinationSum(4));//15
+      log(combinationSum(26));//67108863
+
+     /*
+     已知一个包含n个数字的数组A,
+     其中连续多个数字的和为sum,
+     请找出该连续数字的初始索引start和结束索引end?
+     */
+    //   let nums = [1, 3, 2, 7, 4, 1, 2, 3, 6, 7, 8, 1, 2, 3];
+    //   let sum = 6;
+    //   function getIndexBySum(nums, sum) {
+    //     let ans = [];
+    //     for (let i = 0; i < nums.length; i++) {
+    //       let j = i;
+    //       let temp = 0;
+    //       while (j < nums.length && temp < sum) {
+    //         temp += nums[j];
+    //         j++;
+    //       }
+    //       if (temp === sum) ans.push([i, j - 1]);
+    //     }
+    //     return ans;
+    //   }
+    //   log(getIndexBySum(nums, sum));
+
+      /* 找出26个字母的所有组合 */
+      // var ltArr = new Array();
+      // for (var i = 97; i <= 122; i++) {
+      //   ltArr.push(String.fromCharCode(i));
+      // }
+      // let str = ltArr.join("");
+      // ans = [];
+      // temp = [];
+      // function backTracking(level) {
+      //   if (level > str.length) return;
+      //   if (temp.length !== 0) ans.push(temp.join(""));
+      //   for (let i = level; i < str.length; i++) {
+      //     // debugger;
+      //     temp.push(str.charAt(i));
+      //     backTracking(i + 1);
+      //     temp.pop();
+      //   }
+      // }
+      // backTracking(0);
+      // console.time()
+      // log(ans, ans.length);
+      // console.timeEnd()
+
+      /* map forEach for循环 */
+      // Array.prototype.mapL = function (cb) {
+      //   const res = [];
+      //   for (let i = 0; i < this.length; i++) {
+      //     res.push(cb(this[i], i, this));
+      //   }
+      //   return res;
+      // };
+      let a = [1, 2, 3];
+      // a.forEach((n, i) => (a[i] = a[i] + 2));
+      // a = a.map((n) => n + 2);
+      // a = a.map((n) => (n += 2));
+      // for (let i = 0; i < a.length; i++) {
+      //   a[i] += 2;
+      // }
+      a.forEach(function (n, i) {
+        log(n === a[i]);
+        a[i] += 2;
+      });
+      log(a);
+
+      /* 整数 或 保留小数点后两位 */
+      /^([1-9][0-9]*(\.\d{1,2})?|0(\.\d{1,2})?)$/.test('0.00')
+
+      /* 统计小于n的最大质数 */
+      var countPrimes = function (n) {
+        var isPrime = [],
+          i = 0,
+          j = 0,
+          // ans = 0;
+          kong = [];
+        for (i = 0; i < n; i++) {
+          isPrime[i] = true;
+        }
+        for (i = 2; i * i < n; i++) {
+          for (j = i * i; j < n; j += i) {
+            // i 整除 j 且 j < n
+            isPrime[j] = false;
+          }
+        }
+        for (i = 2; i < n; i++) {
+          // 统计质数
+          if (isPrime[i]) {
+            // ans++;
+            // log(i);
+            kong.push(i);
+          }
+        }
+        // return ans;
+        return kong;
+      };
+      log(countPrimes(97));
+    </script>
+  </body>
+</html>
