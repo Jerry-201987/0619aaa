@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>导出弹窗</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/xlsx.core.min.js"></script>
+    <script src="js/export.js"></script>
+    <style>
+      .pop_main {
+        display: none;
+        width: 628px;
+        height: 378px;
+        border-radius: 5px;
+        position: fixed;
+        background: #fff;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 99;
+      }
+      .pop_title {
+        position: relative;
+        top: 0;
+        margin-left: 2%;
+        margin-right: 2%;
+        height: 26px;
+      }
+      .pop_title div {
+        /* display: inline-block; */
+        float: left;
+        height: 100%;
+        line-height: 26px;
+        font-size: 20px;
+        font-weight: 600;
+        /* color: #fff; */
+      }
+      .pop_title a {
+        width: 26px;
+        height: 26px;
+        background: #fff;
+        color: #000;
+        text-decoration: none;
+        float: right;
+        text-align: center;
+      }
+      .pop_text {
+        margin-top: 100px;
+        text-align: center;
+      }
+      .pop_btns {
+        position: relative;
+        margin-top: 100px;
+        width: 100%;
+        height: 50px;
+      }
+      .pop_btns button {
+        border: none;
+        width: 126px;
+        height: 46px;
+        line-height: 46px;
+        color: #ffffff;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .xls {
+        float: left;
+        margin-left: 10%;
+        background: rgb(144, 195, 31);
+      }
+      .pdf {
+        float: right;
+        margin-right: 10%;
+        background: rgb(0, 133, 208);
+      }
+      #popLayer {
+        position: absolute;
+        display: none;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        background: #dcdbdc;
+        -moz-opacity: 0.8;
+        opacity: 0.8;
+        filter: alpha(opacity=80); /* 只支持IE6、7、8、9 */
+      }
+      #exportFile {
+        background: skyblue;
+        border: none;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="exportFile" disabled>导出</button>
+    <div id="popLayer"></div>
+    <div class="pop_main">
+      <div class="pop_con">
+        <div class="pop_title">
+          <div>系统提示</div>
+          <a href="#">×</a>
+        </div>
+        <div class="pop_text">您需要导出Excel还是PDF格式呢？</div>
+        <div class="pop_btns">
+          <button class="xls">Excel</button>
+          <button class="pdf">PDF</button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(function () {
+      $("#exportFile").click(function () {
+        //显示弹窗的主界面
+        $(".pop_main").show();
+        $("#popLayer").show();
+        //设置animate动画初始值
+        $(".pop_con").css({ top: 0, opacity: 0 });
+        $(".pop_con").animate({ top: "50%", opacity: 1 });
+      });
+
+      $(".xls").click(function () {
+        downloadExl(xlsxArr);
+      });
+      $(".pdf").click(function () {
+        alert(456);
+      });
+
+      //隐藏弹窗 点击关闭按钮
+      $(".pop_title a").click(function () {
+        $(".pop_con").animate({ top: 0, opacity: 0 }, function () {
+          //隐藏弹窗的主界面
+          $(".pop_main").hide();
+          $("#popLayer").hide();
+        });
+      });
+    });
+    if (listData.length > 0) {
+      // $("#exportFile").attr("disabled", false);
+      $("#exportFile").removeAttr("disabled");
+    }
+    function toString(obj) {
+      return Object.prototype.toString.call(obj)
+    }
+    //如何判断两个对象相同
+    function isEqual(a, b){
+      if(a === b) return true
+      if(typeof a !== "object") return false
+      if(toString(a) !== toString(b)) return false
+      return Object.keys(a).every(k => isEqual(a[k], b[k]))
+    }
+    console.log(isEqual([], {}));
+    console.log(isEqual({a:1,b:2}, {a:1,b:2}));
+    console.log(isEqual({a:11,b:22}, {b:22,a:11}));
+  </script>
+</html>

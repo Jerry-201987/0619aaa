@@ -1,0 +1,38 @@
+.container {
+  width: 420px;
+  border: 1px solid #ccc;
+  margin: 100px;
+}
+
+.container li {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+
+.content li {
+  cursor: pointer;
+  box-shadow: 0 0 1px rgb(136, 133, 133);
+}
+
+.content li:hover {
+  background: #eee;
+}
+
+.content li.disabled {
+  background: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.content li.active {
+  background: rgb(224, 131, 151);
+  color: rgb(206, 37, 102);
+}
+
+
+.content li.active2 {
+  background: #ada;
+  color: green;
+}

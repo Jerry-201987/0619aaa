@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../simba.css">
+    <link rel="stylesheet" href="./components/calendar/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <calendar :val='val'></calendar>
+        <hr>
+        {{date1}}
+        <calendar @choose='date1=$event'></calendar>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.js"></script>
+    <script src="http://cdn.staticfile.org/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="./components//calendar/index.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    date1:'',
+                    val: new Date("2020-10-31")
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

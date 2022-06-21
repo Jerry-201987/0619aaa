@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../simba.css">
+    <style>
+        .container {
+            width: 420px;
+            border: 1px solid #ccc;
+            margin: 100px;
+        }
+
+        .container li {
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
+
+        .content li {
+            cursor: pointer;
+            box-shadow: 0 0 1px rgb(136, 133, 133);
+        }
+
+        .content li:hover {
+            background: #eee;
+        }
+
+        .content li.disabled {
+            background: #ddd;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .content li.active {
+            background: #ada;
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+           
+            <ul class="flex">
+                <li v-for='item in "日一二三四五六"'>
+                    {{item}}
+                </li>
+            </ul>
+            <ul class="flex content">
+                <li class="disabled" v-for='item in beforeDays'>{{item}}</li>
+                <li v-for='item in totalDays' :class='{active:item===date.getDate()}'>
+                    {{item}}
+                </li>
+                <li class="disabled" v-for='item in afterDays'>{{item}}</li>
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            computed: {
+                beforeDays() {
+                    let res = []
+                    let temp = new Date(this.date)
+                    temp.setDate(1)
+                    let day = temp.getDay()
+                    for (let i = 0; i < day; i++) {
+                        temp.setDate(temp.getDate() - 1)
+                        res.unshift(temp.getDate());
+                    }
+                    return res
+                },
+                afterDays() {
+                    let res = []
+                    let temp = new Date(this.date)
+                    temp.setDate(this.totalDays)
+                    let day = 6 - temp.getDay()
+                    return day
+                },
+                totalDays() {
+                    let month = this.date.getMonth()
+                    let year = this.date.getYear()
+                    let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
+                    //二月
+                    if (month === 1) {
+                        //闰年
+                        if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
+                            days += 1
+                        }
+                    }
+                    return days
+                }
+            },
+            data() {
+                return {
+                    date: new Date()
+                }
+            },
+        })
+
+    </script>
+
+</body>
+
+</html>
